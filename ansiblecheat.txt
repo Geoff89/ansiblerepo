@@ -1,0 +1,107 @@
+Ansible Glossary
+
+-Control Machine / Node: a system where Ansible is installed and configured to connect and execute commands on nodes.
+-Node: a server controlled by Ansible.
+-Inventory File: a file that contains information about the servers Ansible controls, typically located at /etc/ansible/hosts.
+-Playbook: a file containing a series of tasks to be executed on a remote server.
+-Role: a collection of playbooks and other files that are relevant to a goal such as installing a web server.
+-Play: a full Ansible run. A play can have several playbooks and roles, included from a single playbook that acts as entry point.
+
+Test connectivity to nodes
+ansible all -m ping
+
+Connecting to a different user
+ansible all -m ping -u sammy
+
+Using a custim ssh key
+ansible all -m ping --private-key=~/.ssh/custom_id
+
+using a password-based authentication
+ansible all -m ping --ask-pass
+also
+ansible-playbook myplaybook.yml --ask-pass
+
+providing the sudo password
+ansible all -m ping --ask-become-pass
+or
+ansible-playbook myplaybook.yml --ask-become-pass
+
+Using a custom inventory file
+ansible all -m ping -i my_custom_inventory
+or
+ansible-playbook myplaybook.yml -i my_custom_inventory
+
+Using a dynamic inventory file
+ansible all -m ping -i digital_ocean.py
+
+Running ad-hoc commands
+ansible all -a "uname -a"
+ansible server1 -m apt -a "name=vim"
+
+Running playbooks
+ansible-playbook myplaybook.yml
+for overwriting host options in the playbook and limit execution
+ansible-playbook -l server1 myplaybook.yml
+
+Getting information about a play
+ansible-playbook myplaybook.yml --list-tasks
+ansible-playbook myplaybook.yml --list-hosts
+ansible-playbook myplaybook.yml --list-tags
+
+Controlling playbook execution
+ansible-playbook myplaybook.yml --start-at-task="Set Up Nginx"
+
+--executing specific tasks asscoiated with specfic tags
+ansible-playbook myplaybook.yml --tags=mysql,nginx
+
+--skipping specifc tags
+ansible-playbook myplaybook.yml --skip-tags=mysql
+
+Using Ansible Vault to Store Sensitive Data
+creating a new encypted file
+ansible-vault create credentials.yml
+
+Encrypting an existing ansible file
+ansible-vault encrypt credentials.yml
+
+Viweing contents of an encrypted file
+ansible-vault view credentials.yml
+
+Editing an encrypted file
+ansible-vault edit credentials.yml
+
+Decrypting encrypted files
+ansible-vault decrypt credentials.yml
+
+Using multiple vault passwords
+ansible-vault create --vault-id dev@prompt credentials_dev.yml
+
+ansible-vault create --vault-id prod@prompt credentials_prod.yml
+We used dev and prod as vault IDs to demonstrate how you can create separate vaults per environment, but you can create as many vaults as you want, and you can use any identifier of your choice as vault ID.
+
+to edit
+ansible-vault edit credentials_dev.yml --vault-id dev@prompt
+
+Using a password file
+ansible-vault create --vault-id dev@path/to/passfile credentials_dev.yml
+
+--Running a Playbook with Data Encrypted via Ansible Vault
+Whenever you run a playbook that uses data previously encrypted via ansible-vault, you’ll need to provide the vault password to your playbook command.
+ansible-playbook myplaybook.yml --ask-vault-pass
+ansible-playbook myplaybook.yml --vault-password-file my_vault_password.py
+ansible-playbook myplaybook.yml --vault-id dev@prompt
+ansible-playbook myplaybook.yml --vault-id dev@vault_password.py
+ansible-playbook myplaybook.yml --vault-id dev@vault_password.py --vault-id test@prompt --vault-id ci@prompt
+
+Debbuging
+ansible-playbook myplaybook.yml -v
+ansible-playbook myplaybook.yml -vvvv
+
+ansible --help
+
+
+
+
+
+
+
