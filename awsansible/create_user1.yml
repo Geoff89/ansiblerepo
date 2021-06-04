@@ -1,0 +1,12 @@
+---
+- name: Create Users
+  hosts: all
+  vars_files:
+    - lock.yml
+  tasks:
+    - name: user creation
+      user:
+        name: "{{ user.name }}"
+        uid: "{{ user.uid }}"
+        state: "{{ user.state }}"
+        password: "{{ user_pass | password_hash('sha512') }}"

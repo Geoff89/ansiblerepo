@@ -1,0 +1,4 @@
+user:
+  name:  host2
+  uid:  1002
+  state: present

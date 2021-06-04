@@ -1,0 +1,36 @@
+---
+- name: Demo facts
+  hosts: all
+  tasks:
+    - name: copy file
+      copy:
+        src: specs.empty
+        dest: /tmp/specs.txt
+
+    - name: modify fqdn
+      lineinfile:
+        path: /tmp/specs.txt
+        regex: '^FQDN='
+        line: 'FQDN={{ ansible_facts["fqdn"] }}'
+
+    - name: modify memory
+      lineinfile:
+        path: /tmp/specs.txt
+        regex: '^MEMORY='
+        line: 'MEMORY={{ ansible_facts["memtotal_mb"] }}'
+        
+    - name: modify os
+      lineinfile:
+        path: /tmp/specs.txt
+        regex: '^OS='
+        line: 'OS={{ ansible_facts["distribution"] }}'  
+
+    - name: add hostname
+      lineinfile:
+        path: /tmp/specs.txt
+        line: 'HOSTNAME={{ inventory_hostname }}' 
+        create: yes         
+        
+
+
+

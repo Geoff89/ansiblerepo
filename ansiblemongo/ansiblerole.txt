@@ -1,0 +1,41 @@
+--ansible playbook and role and store in /etc/ansible
+-- touch or nano /etc/ansible/apache_playbook.yml
+--put the playbook data their
+
+TASK 2
+- cd /etc/ansible
+- cd roles
+- sudo ansible-galaxy init samplerolename
+--create ansible-galay for node js
+
+sudo ansible-galaxy init prerequisites
+sudo ansible-galaxy init mongodb
+sudo ansible-galaxy init nodejs
+1. cd prerqusites and under tasks paste
+  
+  ---
+  - name: Install git
+  apt:
+    name: git
+    state: present
+    update_cache: yes
+
+2. Configure our mongodb role    
+3. Configure your nodejs role
+4 create a playbook with all these roles
+5.Before running the playbook ensure you go to the slave machine and update  the keys
+
+sudo apt-key list | grep "expired"  =key importing from mongodb has expired
+-- update the key
+sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 0xd68fa50fea312927
+
+--remove locks
+sudo su
+cd /var/lib/dpkg/
+ls --there are 2 locks
+rm lock-frontend
+rm lock
+ls
+locks are removed
+--go to master and run the playbook
+sudo ansible-playbook /etc/ansible/mean.yml -K

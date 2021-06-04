@@ -1,0 +1,13 @@
+permission_groups:
+  - dbadmin
+  - dbuser
+
+user_list:
+  - name: John Davis
+    username: jdavis
+    role: dbadmin
+  - name: Jeniffer Smith
+    username: jsmith
+    role: dbuser  
+
+

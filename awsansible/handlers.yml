@@ -1,0 +1,33 @@
+---
+- name: MAriadb server is installed
+  hosts: host1
+  vars:
+    db_packages:
+      - mariadb-server
+      - python3-mysqldb
+    db_service: mariadb
+    
+  tasks:
+    - name: "{{ db_packages }} packages are installed"
+      package:
+        name: "{{ db_packages }}"
+        state: present
+      notify:
+        - set db password
+
+    - name: Make sure the database service is running
+      service:
+        name: "{{ db_service }}"
+        enabled: true
+
+  handlers:
+    - name: set db password
+      mysql_user:
+        name: root
+        password: redhat
+
+
+
+        
+
+      

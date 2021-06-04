@@ -1,0 +1,9 @@
+---
+
+- hosts: all
+  tasks:
+  - name: Install httpd Package
+    apt: name=httpd  state=latest
+  - name: Copy httpd configuration file
+    copy:   
+  

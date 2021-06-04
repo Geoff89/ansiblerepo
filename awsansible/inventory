@@ -1,0 +1,8 @@
+[myself]
+localhost
+
+[host1]
+privateip of ec2
+
+[host2]
+privateip of ec2

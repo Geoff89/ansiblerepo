@@ -1,0 +1,105 @@
+1. Create 3 ubuntu free tier instances one master node and two slave nodes
+2. install ansible on the master and python on the slaves
+3. configure the keys
+   - ssh-keygen
+  - copy the public generated key to .ssh/authorized of the slaves
+4 mkdir in our home/ubuntu
+   - mkdir ubuntu
+   add the following 
+- nano ansible.cfg
+copy the below settings
+
+5 create inventory file to look for the slaves
+
+test the connectons
+ansible all --list-hosts
+ansible all -m ping
+ansible web -m ping
+ansible db -m ping
+
+--ansible modules, ansible-docs -l | grep apt and ad -hoc
+ansible host1 -m copy -a 'content="Managed by Ansible\n" dest=/etc/motd1'
+ansible host1 -m command -a 'cat /etc/motd'
+go to host 1 and confirm whether the data was copied there
+cat /etc/motd1
+
+-ansible host2 -m user -a 'name=newbie uid=4000 state=present'
+
+-creating ansible playbook
+-creating users
+ansible-playbook create_user.yml --syntax-check
+--toview whether users have been created
+cat /etc/passwd
+--ansible vault
+the first create_user.yml id not have secrets
+now create secrets to be used by the users
+echo 'techtejendra' > vault-pass
+chmod 0600 vault-pass
+ansible-vault create --vault-password-file=vault-pass lock.yml
+--lock.yml will be created
+add the follwing to lock.yml
+ user_pass:mysecret
+cat lock.yml --this is an encrypted value
+
+ansible-vault view --vault-password-file=vault-pass lock.yml
+
+--after updating our var_lock files and password insert in our users to  create a playbook you will require to create users task but password will be required
+
+- ansible-playbook create_user.yml --syntax-check
+  error as password will be required
+
+ansible-playbook create_user.yml --vault-password-file=vault-pass --syntax-check
+
+ansible-playbook create_user.yml --vault-password-file=vault-pass 
+-go tothe slave and see if the user has been created
+cat /etc/passwd
+whoami
+su host1
+ --password will be the one we put in our lock.ym mysecret
+ --then whoami and will print host1
+
+ --loops
+ creating users in host1.
+ Followog conditions must be met
+ -Ensure permission groups are present before creatig user
+ -user must be part of a given permission group
+ -user  role and permission grop must be same
+ -create a user_list.yml though can be changed as file with no extension to pick up the variables
+ -create auser-group.yml playbook to run
+ -run this playbook
+ ansible-playbook create_user_group.yml --syntax-check
+ -go to host1 undr /etc/passwd to see the group an users are created
+
+ -ansible facts
+ -ansible host1 -m setup
+  ansible host1 -m setup | grep bios or any other facts discovered
+
+ ansible facts problem statement
+ You have the following file in the control node. do the follwing
+ 1. Copy this file to '/tmp/specs.txt' in all hosts
+ 2. Fill in the information in the file
+ 3. Add line 'HOSTNAME=' with use of magic variable
+
+ specs.empty
+ FQDN=
+ MEMORY=
+ OS=
+
+ ansible-playbook facts.yml --syntax-check
+ ansible-playbook facts.yml
+ go to /tmp/specs.txt and our values will be prefilled
+
+Handlers
+Install a mariadb server at host1
+start mariadb service
+set database id and password
+
+ ansible-playbook handlers.yml --syntax-check
+ ansible-playbook handlers.yml
+ mysql -u root -p
+ password; redhat
+ we are now connected to our mariadb server
+ show databases
+
+
+
